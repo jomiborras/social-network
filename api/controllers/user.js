@@ -3,12 +3,14 @@
 var bcrypt = require('bcrypt-nodejs');
 
 var mongoosePaginate = require('mongoose-pagination');
+
 // Librería FILE SYSTEM de NODEJS
 var fs = require('fs');
 // Sistema de ficheros
 var path = require('path');
 
 var User = require('../models/user');
+var Follow = require('../models/follow');
 
 var jwt =require('../services/jwt');
 
@@ -159,7 +161,7 @@ function loginUser(req, res){
 					}
 					
 				}else{
-					return res.status(40).send({message: 'Email o contraseña incorrectos'});
+					return res.status(404).send({message: 'Email o contraseña incorrectos'});
 				}
 			});
 		}else {
@@ -170,6 +172,30 @@ function loginUser(req, res){
 
 // getUser conseguir datos de un usuario
 function getUser(req, res){
+	// var userId = req.params.id;
+	// User.findById(userId, (err, user) => {
+	// 	if(err) return res.status(500).send({message: 'Error en la petición'});
+
+	// 	if(!user) return res.status(404).send({message: 'El usuario no existe'});
+
+	// 	return res.status(200).send({user});
+	// });
+
+	// var userId = req.params.id;
+
+	// User.findById(userId, (err, user) => {
+	// 	if(err) return res.status(500).send({message: 'Error en la petición'});
+
+	// 	if(!user) return res.status(404).send({message: 'El usuario no existe'});
+
+	// 	Follow.findOne({'user': req.user.sub, 'followed': userId}).exec((err, follow) =>{
+	// 		if(err) return res.status(500).send({message: 'Error al comprobar el seguimiento'});
+	// 		return res.status(200).send({user, follow});
+	// 	});
+
+	// });
+
+
 	var userId = req.params.id;
 
 	User.findById(userId, (err, user) => {
@@ -177,16 +203,64 @@ function getUser(req, res){
 
 		if(!user) return res.status(404).send({message: 'El usuario no existe'});
 
-		return res.status(200).send({user});
+
+		followThisUser(req.user.sub, userId).then((value) => {
+			user.password = undefined;
+			return res.status(200).send({
+				user,
+				following: value.following,
+				followed: value.followed
+			});
+
+		});
+		
 	});
 }
 
-// Devolver un listado de usuarios paginado con mongoos-pagination
+async function followThisUser(identity_user_id, user_id){
+
+	var following = await Follow.findOne({'user': identity_user_id, 'followed': user_id}).exec().then((follow) => {
+		return follow;
+	}).catch((err) => {
+		return handleError(err);
+	});
+	
+
+	var followed = await Follow.findOne({'user': user_id, 'followed': identity_user_id}).exec().then((follow) => {
+		return follow;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	return {
+		following: following,
+		followed: followed
+	}
+}
+
+// Devolver un listado de usuarios paginado con mongoose-pagination
 function getUsers(req, res){
+
+	// var identity_user_id = req.user.sub;
+
+	// var page = 1;
+	// if(req.params.page){
+	// 	page = req.params.page;
+	// }
+
+	// var itemsPerPage = 5;
+
+	// User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
+	// 	if(err) return res.status(500).send({message: 'Error en la petición'});
+
+	// 	if(!users) return res.status(404).send({message: 'No hay usuarios disponibles'});
+
+	// 	return res.status(200).send({users: users, total: total, page: Math.ceil(total/itemsPerPage)});
+	// });
+
 	var identity_user_id = req.user.sub;
 
 	var page = 1;
-
 	if(req.params.page){
 		page = req.params.page;
 	}
@@ -198,13 +272,114 @@ function getUsers(req, res){
 
 		if(!users) return res.status(404).send({message: 'No hay usuarios disponibles'});
 
-		return res.status(200).send({
-			users,
-			total,
-			page: Math.ceil(total/itemsPerPage)
+		followUserIds(identity_user_id).then((value) => {
+			return res.status(200).send({
+				users,
+				users_following: value.following,
+				users_follow_me: value.followed,
+				total,
+				page: Math.ceil(total/itemsPerPage)});
 		});
-
+		
 	});
+
+}
+
+async function followUserIds(user_id){
+
+	// var following = await Follow.find({'user': user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec((err, follows) => {
+	// 	var follows_clean = [];
+
+	// 	follows.forEach((follow) => {
+	// 		follows_clean.push(follow.followed);
+	// 	});
+
+	// 	return follows_clean;
+	// });
+
+	// var followed = await Follow.find({'followed': user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec((err, follows) => {
+	// 	var follows_clean = [];
+
+	// 	follows.forEach((follow) => {
+	// 		follows_clean.push(follow.user);
+	// 	});
+
+	// 	return follows_clean;
+	// });
+
+	var following = await Follow.find({'user': user_id}).select({'_id': 0, '__v': 0, 'user': 0}).exec().then((follows) => {
+		return follows;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	var followed = await Follow.find({'followed': user_id}).select({'_id': 0, '__v': 0, 'followed': 0}).exec().then((follows) => {
+		return follows;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	// Procesar followings ids:
+	var following_clean = [];
+
+	following.forEach((follow) => {
+		following_clean.push(follow.followed);
+	});
+
+	// Procesar followed ids
+	var followed_clean = [];
+
+	followed.forEach((follow) => {
+		followed_clean.push(follow.user);
+	});
+
+	return {
+		following: following_clean,
+		followed: followed_clean
+	}
+}
+
+function getCounters(req, res){
+
+	var userId = req.user.sub;
+
+	if(req.params.id){
+		userId = req.params.id;
+	}
+
+	getCountFollow(userId).then((value) => {
+		return res.status(200).send(value);
+	});
+
+}
+
+async function getCountFollow(user_id){
+	// var following = await Follow.count({'user': user_id}).exec((err, count) => {
+	// 	if(err) return handleError(err);
+	// 	return count;
+	// });
+
+	// var followed = await Follow.count({'followed': user_id}).exec((err, count) => {
+	// 	if(err) return handleError(err);
+	// 	return count;
+	// });
+
+	var following = await Follow.count({'user': user_id}).exec().then((count) => {
+		return count;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	var followed = await Follow.count({'followed': user_id}).exec().then((count) => {
+		return count;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	return {
+		following: following,
+		followed: followed
+	}
 }
 
 // Actualizar los datos del usuario
@@ -231,8 +406,6 @@ function updateUser(req, res){
 // Imagen de perfil
 function uploadImage(req, res){
 	var userId = req.params.id;
-
-
 
 	if(req.files){
 		var file_path = req.files.image.path;
@@ -296,6 +469,7 @@ module.exports = {
 	getUser,
 	getUsers,
 	updateUser,
+	getCounters,
 	uploadImage,
 	getImageFile
 }
