@@ -11,6 +11,7 @@ var path = require('path');
 
 var User = require('../models/user');
 var Follow = require('../models/follow');
+var Publication = require('../models/publication');
 
 var jwt =require('../services/jwt');
 
@@ -376,9 +377,16 @@ async function getCountFollow(user_id){
 		return handleError(err);
 	});
 
+	var publications = await Publication.count({'user': user_id}).exec().then((count) => {
+		return count;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
 	return {
 		following: following,
-		followed: followed
+		followed: followed,
+		publications: publications
 	}
 }
 
@@ -415,9 +423,9 @@ function uploadImage(req, res){
 		var file_name = file_split[2];
 		// console.log(file_name);
 		var ext_split = file_name.split('\.');
-		console.log(ext_split);
+		// console.log(ext_split);
 		var file_ext = ext_split[1];
-		console.log(file_ext);
+		// console.log(file_ext);
 
 		if(userId != req.user.sub){
 			return removeFilesOfMedia(res, file_path, 'No tienes permiso para actualizar la imagen de usuario');
@@ -425,7 +433,7 @@ function uploadImage(req, res){
 
 		if(file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif'){
 			// Actualizar documento de usuario logueado
-			User.findByIdAndUpdate(userId, {image: file_name}, { new:true}, (err, userUpdated) =>{
+			User.findByIdAndUpdate(userId, {image: file_name}, {new:true}, (err, userUpdated) =>{
 				if(err) return res.status(500).send({message: 'Error en la petición'});
 
 				if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar la imagen'});
