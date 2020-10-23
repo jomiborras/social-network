@@ -406,7 +406,7 @@ function getUsersLikes(req, res){
 	Like.find({publication: req.params.publication}).populate('user').paginate(page, itemsPerPage, (err, likes, total) => {
 		if(err) return res.status(500).send({message: 'Error al devolver los likes'});
 
-		if(!likes) return res.status(404).send({message: 'Aún no hay usuarios que les guste esta publicación'});
+		if(likes == '') return res.status(404).send({message: 'Aún no hay usuarios que les guste esta publicación'});
 
 		var likes_clean = [];
 
