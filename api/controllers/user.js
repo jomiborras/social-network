@@ -12,6 +12,7 @@ var path = require('path');
 var User = require('../models/user');
 var Follow = require('../models/follow');
 var Publication = require('../models/publication');
+var Like = require('../models/like');
 
 var jwt =require('../services/jwt');
 
@@ -239,6 +240,40 @@ async function followThisUser(identity_user_id, user_id){
 	}
 }
 
+// Devolver si un usuario le gusta una publicación
+// Hay que pasar como parámetros en la url: id de la publicación/id de usuario
+function getUserLike(req, res){
+	var publication = req.params.publication;
+	var user = req.params.user;
+
+	User.findById(user, (err, user) => {
+
+		if(err) return res.status(500).send({message: 'Error en la petición'});
+
+		if(!user) return res.status(404).send({message: 'El usuario no existe'});
+
+		likeThisUser(publication, user).then((value) => {
+			user.password = undefined;
+			return res.status(200).send({
+				user,
+				like: value.like
+			});
+		});
+	});
+}
+
+async function likeThisUser(publication_id, user_id){
+	var like = await Like.findOne({'publication': publication_id, 'user': user_id}).exec().then((like) => {
+		return like;
+	}).catch((err) => {
+		return handleError(err);
+	});
+
+	return {
+		like: like
+	}
+}
+
 // Devolver un listado de usuarios paginado con mongoose-pagination
 function getUsers(req, res){
 
@@ -279,7 +314,9 @@ function getUsers(req, res){
 				users_following: value.following,
 				users_follow_me: value.followed,
 				total,
-				page: Math.ceil(total/itemsPerPage)});
+				page: Math.ceil(total/itemsPerPage
+			)});
+
 		});
 		
 	});
@@ -338,6 +375,70 @@ async function followUserIds(user_id){
 		following: following_clean,
 		followed: followed_clean
 	}
+}
+
+// Devolver los usuarios paginados que les gusta una publicación
+function getUsersLikes(req, res){
+
+	var page = 1;
+	if(req.params.page){
+		page = req.params.page;
+	}
+
+	var itemsPerPage = 5;
+
+	// Like.find({publication: req.params.publication}).populate('user').exec((err, likes) => {
+	// 	if(err) return res.status(500).send({message: 'Error al devolver los likes'});
+
+	// 	var likes_clean = [];
+
+	// 	likes.forEach((like) => {
+	// 		like.user.password = undefined;
+	// 		likes_clean.push(like.user);
+	// 	});
+
+	// 	return res.status(200).send({
+	// 		users: likes_clean,
+	// 		total,
+	// 		page
+	// 	});
+
+	Like.find({publication: req.params.publication}).populate('user').paginate(page, itemsPerPage, (err, likes, total) => {
+		if(err) return res.status(500).send({message: 'Error al devolver los likes'});
+
+		if(!likes) return res.status(404).send({message: 'Aún no hay usuarios que les guste esta publicación'});
+
+		var likes_clean = [];
+
+		likes.forEach((like) => {
+			like.user.password = undefined;
+			likes_clean.push(like.user);
+		});
+
+		return res.status(200).send({
+			total_items: total,
+			pages: Math.ceil(total/itemsPerPage),
+			page:page,
+			users: likes_clean
+		});
+		
+
+		// User.find({user: {'$in': likes_clean}}).sort('-created_at').populate('user').paginate(page, itemsPerPage, (err, users, total) => {
+		// 	if(err) return res.status(500).send({message: 'Error al devolver los usarios que les gusta esta publicación'});
+
+		// 	if(!users) return res.status(404).send({message: 'Aún no hay usuarios que les guste esta publicación'});
+
+		// 	return res.status(200).send({
+		// 		total_items: total,
+		// 		pages: Math.ceil(total/itemsPerPage),
+		// 		page: page,
+		// 		users
+		// 	});
+
+		// });
+
+	});
+
 }
 
 function getCounters(req, res){
@@ -475,6 +576,8 @@ module.exports = {
 	saveUser,
 	loginUser,
 	getUser,
+	getUserLike,
+	getUsersLikes,
 	getUsers,
 	updateUser,
 	getCounters,

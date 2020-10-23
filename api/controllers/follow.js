@@ -4,9 +4,10 @@
 // var fs = require('fs');
 var mongoosePaginate = require('mongoose-pagination');
 
-var Use = require('../models/user');
+var User = require('../models/user');
 var Follow = require('../models/follow');
 
+// Método de prueba
 function prueba(req, res){
 	res.status(200).send({message: 'Hola desde el follow controller'});
 }

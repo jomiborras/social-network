@@ -21,6 +21,10 @@ api.post('/login', UserController.loginUser);
 
 api.get('/user/:id', md_auth.ensureAuth, UserController.getUser);
 
+api.get('/publicationlike/:publication/:user', md_auth.ensureAuth, UserController.getUserLike);
+
+api.get('/publicationlikes/:publication/:page?', md_auth.ensureAuth, UserController.getUsersLikes);
+
 api.get('/users/:page?', md_auth.ensureAuth, UserController.getUsers);
 
 api.get('/counters/:id?', md_auth.ensureAuth, UserController.getCounters);

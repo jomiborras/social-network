@@ -3,12 +3,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var PublicationSchema = ({
+var LikeSchema = Schema({
 	user: { type: Schema.ObjectId, ref: 'User' },
-	title: String,
-	text: String,
-	file: String,
+	publication: { type: Schema.ObjectId, ref: 'Publication' },
 	created_at: String
 });
 
-module.exports = mongoose.model('Publication', PublicationSchema);
+module.exports = mongoose.model('Like', LikeSchema);
