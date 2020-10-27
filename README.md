@@ -39,3 +39,4 @@ LIBRERÍAS INSTALADAS:
 
 [MISC] PREGUNTAS Y DUDAS:
 https://stackoverflow.com/questions/52361996/mongodb-deprecation-warnings-when-using-mongoose/
+https://es.stackoverflow.com/questions/401801/comparar-y-borrar-registros-de-varios-documentos-con-un-mismo-id-y-con-atenticac
