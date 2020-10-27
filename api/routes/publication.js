@@ -16,6 +16,8 @@ api.get('/publications/:page?', md_auth.ensureAuth, PublicationController.getPub
 
 api.get('/publication/:id', md_auth.ensureAuth, PublicationController.getPublication);
 
+api.put('/publication/:id', md_auth.ensureAuth, PublicationController.editPublication);
+
 api.delete('/publication/:id', md_auth.ensureAuth, PublicationController.deletePublication);
 
 api.post('/upload-publication-image/:id', [md_auth.ensureAuth, md_upload], PublicationController.uploadImage);

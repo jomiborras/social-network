@@ -38,6 +38,19 @@ function saveComment(req, res){
 
 }
 
+// Devolver un comentario
+function getComment(req, res){
+	var commentId = req.params.id;
+
+	Comment.findById(commentId, (err, comment) => {
+		if(err) return res.status(500).send({message: 'Error al devolver la publicación'});
+
+		if(!comment) return res.status(404).send({message: 'El comentario no existe o ha sido borrado'});
+
+		return res.status(200).send({comment});
+	});
+}
+
 // Devolver los comentarios paginados de una publicación
 function getComments(req, res){
 	var page = 1;
@@ -73,7 +86,6 @@ function getComments(req, res){
 // Editar un comentario
 function editComment(req, res){
 	var commentId = req.params.id;
-	var userId = req.user.sub;
 	var update = req.body;
 
 	Comment.findOneAndUpdate({'user': req.user.sub, '_id': commentId}, update, {new: true, useFindAndModify: false}, (err, commentUpdated) => {
@@ -102,6 +114,7 @@ function deleteComment(req, res){
 module.exports = {
 	pruebaComment,
 	saveComment,
+	getComment,
 	getComments,
 	editComment,
 	deleteComment

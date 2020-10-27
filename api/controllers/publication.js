@@ -8,6 +8,7 @@ var mongoosePaginate = require('mongoose-pagination');
 var Publication = require('../models/publication');
 var User = require('../models/user');
 var Follow = require('../models/follow');
+var Comment = require('../models/comment');
 
 // Método de prueba
 function pruebaPublication(req, res){
@@ -86,7 +87,18 @@ function getPublication(req, res){
 
 // Editar una publicación
 function editPublication(req, res){
-	
+	var publicationId = req.params.id;
+	var update = req.body;
+
+	Publication.findOneAndUpdate({'user': req.user.sub, '_id': publicationId}, update, {new: true, useFindAndModify: false}, (err, publicationUpdated) => {
+		if(err) return res.status(500).send({message: 'Error al editar la publicación'});
+
+		if(!publicationUpdated) return res.status(404).send({message: 'No se pudo editar la publicación'});
+
+		return res.status(200).send({
+			publication: publicationUpdated
+		});
+	});
 }
 
 
@@ -94,13 +106,26 @@ function editPublication(req, res){
 function deletePublication(req, res){
 	var publicationId = req.params.id;
 
-	Publication.find({'user': req.user.sub, '_id': publicationId}).remove(err => {
+	Publication.find({'user': req.user.sub, '_id': publicationId}).remove((err, publicationRemoved) => {
 		if(err) return res.status(500).send({message: 'Error al borrar la publicación'});
 
-		// if(!publicationRemoved) return res.status(404).send({message: 'No se ha podido borrar la publicación'});
+		if(!publicationRemoved) return res.status(404).send({message: 'Error al borrar la publicación'});
 
-		return res.status(200).send({message: 'Se ha eliminado la publicación'});
+		if(publicationRemoved) {
+			Comment.find({'publication': publicationId}).remove(err => {
+				if(err) return res.status(500).send({message: 'Error al borrar los comentarios'});
+
+				// return res.status(200).send({message: 'Se han eliminado los comentarios'});
+			});
+
+			// if(!publicationRemoved) return res.status(404).send({message: 'No se ha podido borrar la publicación'});
+
+			return res.status(200).send({message: 'Se ha eliminado la publicación'});
+		}
+		
 	});
+
+	
 }
 
 // Subir imágenes a la publicación
@@ -171,6 +196,7 @@ module.exports = {
 	savePublication,
 	getPublications,
 	getPublication,
+	editPublication,
 	deletePublication,
 	uploadImage,
 	getImageFile
