@@ -3,6 +3,7 @@
 var path = require('path');
 var fs = require('fs');
 var paginate = require('mongoose-pagination');
+var moment = require('moment');
 
 var Use = require('../models/user');
 var Publication = require('../models/publication');
@@ -21,6 +22,7 @@ function saveLike(req, res){
 	var like = new Like();
 	like.user = req.user.sub;
 	like.publication = params.publication;
+	like.created_at = moment().unix();
 
 	like.save((err, likeStored) => {
 		if(err) return res.status(500).send({message: 'Error al darle like a la publicación'});

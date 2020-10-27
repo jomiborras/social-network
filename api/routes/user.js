@@ -13,7 +13,7 @@ var md_upload = multipart({uploadDir: './media/users'});
 
 api.get('/home', UserController.home);
 
-api.get('/pruebaUser', md_auth.ensureAuth, UserController.pruebas);
+api.get('/prueba-user', md_auth.ensureAuth, UserController.pruebas);
 
 api.post('/register', UserController.saveUser);
 
@@ -21,9 +21,9 @@ api.post('/login', UserController.loginUser);
 
 api.get('/user/:id', md_auth.ensureAuth, UserController.getUser);
 
-api.get('/publicationlike/:publication/:user', md_auth.ensureAuth, UserController.getUserLike);
+api.get('/publication-like/:publication/:user', md_auth.ensureAuth, UserController.getUserLike);
 
-api.get('/publicationlikes/:publication/:page?', md_auth.ensureAuth, UserController.getUsersLikes);
+api.get('/publication-likes/:publication/:page?', md_auth.ensureAuth, UserController.getUsersLikes);
 
 api.get('/users/:page?', md_auth.ensureAuth, UserController.getUsers);
 

@@ -34,6 +34,7 @@ function saveMessage(req, res){
 	});
 }
 
+// Devolver mensajes recibidos
 function getReceivedMessages(req, res){
 	var userId = req.user.sub;
 
@@ -58,6 +59,7 @@ function getReceivedMessages(req, res){
 	});
 }
 
+// Devolver mensajes enviados
 function getEmittedMessages(req, res){
 	var userId = req.user.sub;
 
@@ -82,6 +84,7 @@ function getEmittedMessages(req, res){
 	});
 }
 
+// Devolver mensajes no leídos
 function getUnviewedMessages(req, res){
 	var userId = req.user.sub;
 
@@ -94,6 +97,7 @@ function getUnviewedMessages(req, res){
 	});
 }
 
+// Marcar mensajes no leídos como leídos
 function setViewedMessages(req, res){
 	var userId = req.user.sub;
 

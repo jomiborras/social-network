@@ -14,7 +14,7 @@ function pruebaPublication(req, res){
 	res.status(200).send({message: 'Hola mundo desde el controlador de publicaciones'});
 }
 
-// Nuevas publicaciones
+// Crear una publicación
 function savePublication(req, res){
 	var params = req.body;
 
@@ -83,6 +83,12 @@ function getPublication(req, res){
 		return res.status(200).send({publication});
 	});
 }
+
+// Editar una publicación
+function editPublication(req, res){
+	
+}
+
 
 // Eliminar una publicación
 function deletePublication(req, res){

@@ -8,7 +8,7 @@ var md_auth = require('../middlewares/authenticated');
 var multipart = require('connect-multiparty');
 var md_upload = multipart({uploadDir: './media/publications'});
 
-api.get('/pruebaPublication', md_auth.ensureAuth, PublicationController.pruebaPublication);
+api.get('/prueba-publication', md_auth.ensureAuth, PublicationController.pruebaPublication);
 
 api.post('/publication', md_auth.ensureAuth, PublicationController.savePublication);
 
