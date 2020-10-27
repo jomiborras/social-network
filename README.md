@@ -7,16 +7,16 @@ https://www.udemy.com/course/desarrollar-una-red-social-con-javascript-angular-y
 
 El proyecto además incluye diversas funcionalidades incluidas en el curso, más otras que no están desarrolladas en los videos:
 - Funcionalidades del curso:
-• Registro de Usuario y Contraseña encriptados
-• Seguimiento de usuarios
-• Alta de publicaciones
-• Sistema de mensajería
+Registro de Usuario y Contraseña encriptados
+Seguimiento de usuarios
+Alta de publicaciones
+Sistema de mensajería
 
 - Funcionalidades agregadas:
-• Sistema de likes de publicaciones
-• Sistema de comentarios de publicaciones
-• Sistema de edición de comentarios y publicaciones
-• (Próximamante más)
+Sistema de likes de publicaciones
+Sistema de comentarios de publicaciones
+Sistema de edición de comentarios y publicaciones
+(Próximamante más)
 
 LINK DEL DEPLOY:
 (Próximamente)
