@@ -37,6 +37,8 @@ LIBRERÍAS INSTALADAS:
 - Nodemon
 - Mongoose-pagination
 
-[MISC] PREGUNTAS Y DUDAS:
+[MISC] PREGUNTAS, DUDAS y LINKS DE INSTERÉS:
+
 https://stackoverflow.com/questions/52361996/mongodb-deprecation-warnings-when-using-mongoose/
 https://es.stackoverflow.com/questions/401801/comparar-y-borrar-registros-de-varios-documentos-con-un-mismo-id-y-con-atenticac
+https://victorroblesweb.es/2017/11/09/configurar-cabeceras-acceso-cors-en-nodejs/
