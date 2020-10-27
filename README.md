@@ -11,6 +11,7 @@ El proyecto además incluye diversas funcionalidades incluidas en el curso, más
 • Seguimiento de usuarios
 • Alta de publicaciones
 • Sistema de mensajería
+
 - Funcionalidades agregadas:
 • Sistema de likes de publicaciones
 • Sistema de comentarios de publicaciones
