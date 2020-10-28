@@ -24,7 +24,7 @@ LINK DEL DEPLOY:
 TECNOLOGÍAS APLICADAS:
 - NodeJs v14.13.1
 - MongoDB v4.2.6
-- Angular v9.1.4
+- Angular CLI v10.2.0
 
 LIBRERÍAS INSTALADAS:
 - Express
