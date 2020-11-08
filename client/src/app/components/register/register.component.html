@@ -1,0 +1,51 @@
+<div class="col-lg-6">
+	<h1 class="OpenSans-Regular"> {{title}} </h1>
+
+	<hr>
+
+	<div class="alert alert-success" *ngIf="status == 'success'">
+		Registro completado correctamente, <a [routerLink]="['/login']">Inicia sesión aquí</a>
+	</div>
+
+	<div class="alert alert-danger" *ngIf="status == 'error'">
+		Ya existe el usuario
+	</div>
+
+	<form action="" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" class="col-lg-10">
+
+		<p>
+			<label for="">Nombre</label>
+			<input type="text" name="name" #name="ngModel" [(ngModel)]="user.name" class="form-control" required>
+			<span *ngIf="!name.valid && name.touched">El nombre es obligatorio</span>
+		</p>
+
+		<p>
+			<label for="">Apellido</label>
+			<input type="text" name="last_name" #last_name="ngModel" [(ngModel)]="user.last_name" class="form-control" required>
+			<span *ngIf="!last_name.valid && last_name.touched">El apellido es obligatorio</span>
+		</p>
+
+		<p>
+			<label for="">Apodo</label>
+			<input type="text" name="nick_name" #nick_name="ngModel" [(ngModel)]="user.nick_name" class="form-control" required>
+			<span *ngIf="!nick_name.valid && nick_name.touched">El apellido es obligatorio</span>
+		</p>
+
+		<p>
+			<label for="">Email</label>
+			<input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+			<span *ngIf="!email.valid && email.touched">El email es obligatorio</span>
+		</p>
+
+		<p>
+			<label for="">Password</label>
+			<input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" class="form-control" required>
+			<span *ngIf="!password.valid && password.touched">La contraseña es obligatoria</span>
+		</p>
+
+		<input type="submit" value="{{title}}" class="btn btn-danger" [disabled]="!registerForm.form.valid" name="">
+
+
+
+	</form>
+</div>

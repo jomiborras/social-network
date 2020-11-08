@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Fonts */
+
+@font-face {
+  font-family: OpenSansRegular;
+  src: url('fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: Interstate-Black-Cond;
+  src: url('fonts/interstate-black-cond.otf');
+}
+
+@font-face {
+  font-family: Interstate-Regular-Cond;
+  src: url('fonts/interstate-regular-comp.otf');
+}
+
+@font-face {
+  font-family: Montserrat-Reg;
+  src: url('fonts/Montserrat-Regular.ttf');
+}
+
+.OpenSans-Regular {
+	font-family: OpenSansRegular;
+}
+
+.Interstate-Black {
+	font-family: Interstate-Black-Cond;
+}
+
+.Interstate-Reg {
+	font-family: Interstate-Regular-Cond;
+}
+
+.Montserrat-Reg {
+	font-family: Montserrat-Reg;
+}
