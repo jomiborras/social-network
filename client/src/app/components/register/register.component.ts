@@ -15,8 +15,6 @@ export class RegisterComponent implements OnInit {
 
   public user: User;
 
-  // public submitAttempt: boolean = false;
-
   public status: string;
 
 	constructor(
@@ -26,16 +24,7 @@ export class RegisterComponent implements OnInit {
 
     ) {
 		this.title = 'Registrate';
-    this.user = new User(
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "ROLE_USER",
-      ""
-      );
+    this.user = new User("", "", "", "", "", "", "ROLE_USER", "");
 	}
 
   ngOnInit(): void {

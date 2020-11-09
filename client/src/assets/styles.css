@@ -37,3 +37,9 @@
 .Montserrat-Reg {
 	font-family: Montserrat-Reg;
 }
+
+.active {
+  background: #9c1111;
+  margin: 0px;
+  padding: 0px;
+}

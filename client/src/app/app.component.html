@@ -8,20 +8,32 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mr-auto" *ngIf="identity">
 
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="#"> <i data-feather="home"></i> Home <span class="sr-only"></span></a>
         </li>
 
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="#"> <i data-feather="list"></i> Timeline <span class="sr-only"></span></a>
         </li>
 
-         <li class="nav-item active">
+         <li class="nav-item">
           <a class="nav-link" href="#"> <i data-feather="users"></i> Gente <span class="sr-only"></span></a>
         </li>
 
+      </ul>
+
+      <ul class="navbar-nav mr-auto" *ngIf="!identity">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/login']" [routerLinkActive]="['active']"> <i data-feather="log-in"></i> Login <span class="sr-only"></span></a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/register']" [routerLinkActive]="['active']"> <i data-feather="user-plus"></i> Registro <span class="sr-only"></span></a>
+        </li>
+
+        
       </ul>
 
     </div>

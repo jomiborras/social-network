@@ -1,1 +1,33 @@
-<h1>{{ title }}</h1>
+<div class="col-lg-6">
+	<h1 class="OpenSans-Regular">{{ title }}</h1>
+	<hr>
+
+	<div class="alert alert-success" *ngIf="status == 'success'">
+		Te has identificado correctamente, Bienvenido!!
+	</div>
+
+	<div class="alert alert-danger" *ngIf="status == 'error'">
+		No te has podido identificar correctamente.
+	</div>
+
+	<form action="" #loginForm="ngForm" (ngSubmit)="onSubmit()" class="col-lg-10">
+		<p>
+			<label for="">Email</label>
+			<input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+			<span *ngIf="!email.valid && email.touched">
+				El email no es correcto
+			</span>
+		</p>
+
+		<p>
+			<label for="">Contraseña</label>
+			<input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" class="form-control" required>
+			<span *ngIf="!password.valid && password.touched">
+				La constraseña es obligatoria
+			</span>
+		</p>
+		
+		<input type="submit" value="Entrar" class="btn btn-danger" [disabled]="!loginForm.form.valid">
+
+	</form>
+</div>
