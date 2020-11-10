@@ -44,8 +44,8 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ identity.name }}</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#"><i data-feather="user"></i>Mi Perfil</a>
-            <a class="dropdown-item" href="#"><i data-feather="settings"></i>Mis datos</a>
-            <a class="dropdown-item" href="#" (click)="logout()"><i data-feather="log-out"></i>Cerrar Sesión</a>
+            <a class="dropdown-item" [routerLink]="['/mis-datos']"><i data-feather="settings"></i>Mis datos</a>
+            <a class="dropdown-item" (click)="logout()"><i data-feather="log-out"></i>Cerrar Sesión</a>
           </div>
           
         </li>        
