@@ -1,6 +1,7 @@
 import { Component, OnInit, DoCheck, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from './services/user.service';
+import { GLOBAL } from './services/global';
 import * as Feather from 'feather-icons';
 
 @Component({
@@ -12,15 +13,16 @@ import * as Feather from 'feather-icons';
 
 export class AppComponent implements OnInit, DoCheck, AfterViewInit {
   public title: string;
-
   public identity;
+  public url: string;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
   	private _userService: UserService
   ){
-  	this.title = 'NGSOCIAL'
+  	this.title = 'NGSOCIAL',
+    this.url = GLOBAL.url
 
   }
 

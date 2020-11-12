@@ -37,8 +37,8 @@
       </ul>
 
       <ul class="navbar-nav form-inline" *ngIf="identity">
-        <li class="nav-item">
-          AVATAR
+        <li class="nav-item avatar">
+          <img src="{{ url + 'user-image/' + identity.image }}" *ngIf="identity && identity.image" alt="">
         </li>
         <li class="nav-item dropleft">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ identity.name }}</a>
